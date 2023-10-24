@@ -51,7 +51,7 @@ void draw() {
         }
     }
     apple.draw();
-    // System.out.println("Apple Pos: { " + apple.pos[0] + ", " + apple.pos[1] + " }");
+    System.out.println("Apple Pos: { " + apple.pos[0] + ", " + apple.pos[1] + " }");
     try {
       Thread.sleep(50);
     } catch (InterruptedException e) {
@@ -65,28 +65,28 @@ void randomisepos(Rect rect) {
     }
 
 void keyPressed() {
-    if (key == 'w' || key == 'W') {
+    if (key == 'w' || key == 'W' || keyCode == UP) {
         if (snake.snak[0].pos[1] - 1 == snake.snak[1].pos[1]) {
             //alive = false;
         } else {
           goup();
         }
     }
-    if (key == 'a' || key == 'A') {
+    if (key == 'a' || key == 'A' || keyCode == LEFT) {
         if (snake.snak[0].pos[0] - 1 == snake.snak[1].pos[0] ) {
             //alive = false;
         } else {
           totheleft();
         }
     }
-    if (key == 'd' || key == 'D') {
+    if (key == 'd' || key == 'D' || keyCode == RIGHT) {
         if (snake.snak[0].pos[0] + 1 == snake.snak[1].pos[0]) {
             //alive = false;
         } else {
           totheright();
         }
     }
-    if (key == 's' || key == 'S') {
+    if (key == 's' || key == 'S' || keyCode == DOWN) {
         if (snake.snak[0].pos[1] + 1 == snake.snak[1].pos[1]) {
             //alive = false;
         } else {
@@ -124,7 +124,7 @@ class Snake {
             int blockx = this.snak[0].pos[0] + snakedir[0];
             int blocky = this.snak[0].pos[1] + snakedir[1];
             this.snak[this.len].setpos(blockx, blocky);
-            System.out.println("Pos: { " + this.snak[len].pos[0] + ", " + this.snak[len].pos[1] + " }");
+            //System.out.println("Pos: { " + this.snak[len].pos[0] + ", " + this.snak[len].pos[1] + " }");
             Rect[] nytt = new Rect[this.len + 1];
             Rect forste = this.snak[this.len];
             for (int i = 0; i < this.len; i++) {
@@ -161,6 +161,8 @@ class Snake {
         int lasty = this.snak[newlen - 1].pos[1];
         tmpsave[newlen].setpos(lastx, lasty);
         this.snak = tmpsave;
+        tmpsave = null;
+        System.gc();
         // garbage collector please save me i dont know how to delete these
     }
 }
