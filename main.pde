@@ -2,7 +2,7 @@ int BLOCKSIZE = 25;
 int[] green = {0, 220, 0};
 int[] red = {220, 0, 0};
 int[] blue = {0, 0, 220};
-int[] startingpos = {randInt(20, 40), randInt(15, 30)};
+int[] startingpos = {randInt(20, 38), randInt(15, 28)};
 int[] snakedir = {0, 0};
 /*
     snakedir[0]: x direction
@@ -11,11 +11,13 @@ int[] snakedir = {0, 0};
 */
 // Rect testrect = new Rect(3, 8);
 boolean alive = true;
-Rect apple = new Rect(randInt(2, 40), randInt(2, 30));
+boolean began = false;
+Rect apple = new Rect(randInt(2, 30), randInt(2, 30));
 Snake snake = new Snake(4, startingpos[0], startingpos[1]);
 
 void setup() {
   size(1025, 750);
+  windowTitle("Snake Clone - Synnøve Olsdatter");
 }
 
 void draw() {
@@ -27,7 +29,20 @@ void draw() {
         snake.snak[i].pos[1] = randInt(2, 30);
     }
     */
+    if (began) {
+        for (int i = 1; i < snake.len; i++) {
+          if (snake.snak[0].pos[0] == snake.snak[i].pos[0] && snake.snak[0].pos[1] == snake.snak[i].pos[1]) {
+            alive = false;
+          }
+        }
+    }
     snake.bloop();
+    if (!alive) {
+      textSize(112);
+      text("You Died!", 0, displayHeight / 3);
+      textSize(52);
+      text("Sorry about that one", 0, displayHeight / 2);
+    }
     setcolor(red);
     for (int i = 0; i < snake.len; i++) {
         if (snake.snak[i].pos[0] == apple.pos[0] && snake.snak[i].pos[1] == apple.pos[1]) {
@@ -36,10 +51,12 @@ void draw() {
         }
     }
     apple.draw();
+    // System.out.println("Apple Pos: { " + apple.pos[0] + ", " + apple.pos[1] + " }");
     try {
       Thread.sleep(50);
     } catch (InterruptedException e) {
       System.out.println("agh");
+      alive = false;
     }
 }
 
@@ -50,27 +67,31 @@ void randomisepos(Rect rect) {
 void keyPressed() {
     if (key == 'w' || key == 'W') {
         if (snake.snak[0].pos[1] - 1 == snake.snak[1].pos[1]) {
-            alive = false;
+            //alive = false;
+        } else {
+          goup();
         }
-        goup();
     }
     if (key == 'a' || key == 'A') {
         if (snake.snak[0].pos[0] - 1 == snake.snak[1].pos[0] ) {
-            alive = false;
+            //alive = false;
+        } else {
+          totheleft();
         }
-        totheleft();
     }
     if (key == 'd' || key == 'D') {
         if (snake.snak[0].pos[0] + 1 == snake.snak[1].pos[0]) {
-            alive = false;
+            //alive = false;
+        } else {
+          totheright();
         }
-        totheright();
     }
     if (key == 's' || key == 'S') {
         if (snake.snak[0].pos[1] + 1 == snake.snak[1].pos[1]) {
-            alive = false;
+            //alive = false;
+        } else {
+          downerman();
         }
-        downerman();
     }
 }
 
@@ -116,6 +137,9 @@ class Snake {
         for (int i = 0; i < this.len; i++) {
           this.snak[i].draw();
         }
+        if (snake.snak[0].pos[0] >= 41 || snake.snak[0].pos[1] >= 31 || snake.snak[0].pos[0] < 0 || snake.snak[0].pos[1] < 0) {
+          alive = false;
+        }
     }
     void omnomnom() {// when snake eats apple
         int newlen = this.snak.length;
@@ -124,6 +148,7 @@ class Snake {
         for (int i = 0; i < newlen; i++) {
             tmpsave[i] = this.snak[i];
         }
+        began = true;
         /*
         int lastx = this.snak[this.len].pos[0];
         int lasty = this.snak[this.len].pos[1];
